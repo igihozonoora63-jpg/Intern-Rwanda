@@ -1,270 +1,119 @@
 <script setup>
-import {ref} from 'vue';
-import {useRouter} from 'vue-router';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-const router=useRouter();
-const email=ref('');
-const password=ref('');
+const router = useRouter();
 const name = ref('');
+const email = ref('');
+const password = ref('');
 const role = ref('');
 
+// Custom registration data
+const school = ref('');
+const trade = ref('');
+const phone = ref('');
+const companyName = ref('');
+const companyAddress = ref('');
+const regNumber = ref('');
+
 const register = () => {
+  if (!name.value) { alert("Please enter your name"); return; }
+  if (!email.value) { alert("Please enter your email"); return; }
+  if (!email.value.includes('@') || !email.value.includes('.')) { alert("Please enter a valid email address"); return; }
+  if (!password.value) { alert("Please enter your password"); return; }
+  if (password.value.length < 6) { alert("Password must be at least 6 characters long"); return; }
+  if (!role.value) { alert("Please select a role"); return; }
 
-  if (name.value === "") {
-    alert("Please enter your name")
-    return
+  // Nested validation checks based on selection
+  if (role.value === 'student' && (!school.value || !trade.value)) {
+    alert("Please complete all student credentials fields");
+    return;
   }
-
-  if (email.value === "") {
-    alert("Please enter your email")
-    return
-  }
-
-  if (!email.value.includes('@') || !email.value.includes('.')) {
-    alert("Please enter a valid email address")
-    return
-  }
-
-  if (password.value === "") {
-    alert("Please enter your password")
-    return
-  }
-
-  if (password.value.length < 6) {
-    alert("Password must be at least 6 characters long")
-    return
-  }
-
-  if (role.value === "") {
-    alert("Please select a role")
-    return
+  if (role.value === 'company' && (!companyName.value || !regNumber.value)) {
+    alert("Please complete core corporate identity credentials");
+    return;
   }
 
   if (role.value === 'student') {
-    router.push('/student-dashboard')
+    router.push('/student-dashboard');
+  } else if (role.value === 'company') {
+    router.push('/company-dashboard');
   }
-
-  if (role.value === 'company') {
-    router.push('/company-dashboard')
-  }
-}
-
-
+};
 </script>
 
-
 <template>
-  <div class="min-h-screen bg-slate-100">
-
-    <!-- Main Container -->
-
-    <div class="container mx-auto px-6 py-10">
-
-      <div
-        class="grid lg:grid-cols-2 gap-10 items-center"
-      >
-
-        <!-- LEFT SECTION -->
-
-        <div
-          class="bg-gradient-to-br from-teal-600 to-green-500
-          rounded-3xl p-10 text-white shadow-xl"
-        >
-
-          <h1 class="text-5xl font-bold mb-6">
-            Intern Rwanda
-          </h1>
-
-          <p class="text-xl leading-relaxed mb-8">
-            Connecting TVET students with
-            companies across Rwanda.
+  <div class="min-h-screen bg-slate-50 flex items-center justify-center py-12 px-6">
+    <div class="max-w-5xl w-full grid lg:grid-cols-2 gap-10 bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
+      
+      <div class="bg-gradient-to-br from-teal-700 to-teal-500 p-12 text-white flex flex-col justify-between">
+        <div>
+          <router-link to="/" class="text-3xl font-bold tracking-tight">Intern Rwanda</router-link>
+          <p class="text-teal-100 mt-4 text-lg leading-relaxed">
+            Create an account to begin posting jobs or deploying student profiles across local enterprises.
           </p>
+        </div>
 
-          <div class="space-y-4">
+        <div class="space-y-4">
+          <div class="flex items-center gap-3 bg-white/10 px-4 py-3 rounded-xl backdrop-blur-sm">✓ Account Profiles Verified</div>
+          <div class="flex items-center gap-3 bg-white/10 px-4 py-3 rounded-xl backdrop-blur-sm">✓ Integrated Educational Records</div>
+        </div>
+      </div>
 
-            <div class="bg-white/10 p-4 rounded-xl">
-              ✓ Verified Students
-            </div>
+      <div class="p-10 lg:p-12">
+        <h2 class="text-3xl font-bold text-slate-800">Create Account</h2>
+        <p class="text-slate-500 mt-1 mb-6">Join the professional TVET ecosystem</p>
 
-            <div class="bg-white/10 p-4 rounded-xl">
-              ✓ Trusted Companies
-            </div>
-
-            <div class="bg-white/10 p-4 rounded-xl">
-              ✓ Real Internship Opportunities
-            </div>
-
-            <div class="bg-white/10 p-4 rounded-xl">
-              ✓ Fast Application Process
-            </div>
-
+        <form @submit.prevent="register" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
+            <input v-model="name" type="text" placeholder="John Doe" class="w-full p-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600" />
           </div>
 
-        </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
+            <input v-model="email" type="email" placeholder="john@example.com" class="w-full p-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600" />
+          </div>
 
-        <!-- RIGHT SECTION -->
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+            <input v-model="password" type="password" placeholder="Min. 6 characters" class="w-full p-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600" />
+          </div>
 
-        <div
-          class="bg-white rounded-3xl shadow-xl p-10"
-        >
-
-          <h2
-            class="text-3xl font-bold text-center text-teal-700"
-          >
-            Create Account
-          </h2>
-
-          <p
-            class="text-center text-gray-500 mt-2 mb-8"
-          >
-            Join Rwanda's leading internship platform
-          </p>
-
-          <form
-            @submit.prevent="register"
-            class="space-y-4"
-          >
-
-            <!-- Name -->
-
-            <input
-              v-model="name"
-              type="text"
-              placeholder="Full Name"
-              class="w-full p-3 border rounded-xl"
-            />
-
-            <!-- Email -->
-
-            <input
-              v-model="email"
-              type="email"
-              placeholder="Email Address"
-              class="w-full p-3 border rounded-xl"
-            />
-
-            <!-- Password -->
-
-            <input
-              v-model="password"
-              type="password"
-              placeholder="Password"
-              class="w-full p-3 border rounded-xl"
-            />
-
-            <!-- Role -->
-
-            <select
-              v-model="role"
-              class="w-full p-3 border rounded-xl"
-            >
-              <option value="">
-                Select Role
-              </option>
-
-              <option value="student">
-                Student
-              </option>
-
-              <option value="company">
-                Company
-              </option>
-
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">I am registering as a...</label>
+            <select v-model="role" class="w-full p-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 bg-white">
+              <option value="">Select account role...</option>
+              <option value="student">Student looking for Internships</option>
+              <option value="company">Company seeking Talent</option>
             </select>
+          </div>
 
-            <!-- STUDENT FIELDS -->
+          <div v-if="role === 'student'" class="p-4 bg-slate-50 rounded-xl space-y-4 border border-slate-100">
+            <h4 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Academic Background</h4>
+            <input v-model="school" type="text" placeholder="TVET School Name" class="w-full p-3 bg-white border border-slate-200 rounded-xl" />
+            <input v-model="trade" type="text" placeholder="Field of Trade (e.g., Masonry, Software)" class="w-full p-3 bg-white border border-slate-200 rounded-xl" />
+            <input v-model="phone" type="tel" placeholder="Active Phone Number" class="w-full p-3 bg-white border border-slate-200 rounded-xl" />
+          </div>
 
-            <div
-              v-if="role === 'student'"
-              class="space-y-4"
-            >
+          <div v-if="role === 'company'" class="p-4 bg-slate-50 rounded-xl space-y-4 border border-slate-100">
+            <h4 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Corporate Identity</h4>
+            <input v-model="companyName" type="text" placeholder="Registered Company Name" class="w-full p-3 bg-white border border-slate-200 rounded-xl" />
+            <input v-model="companyAddress" type="text" placeholder="Headquarters Address" class="w-full p-3 bg-white border border-slate-200 rounded-xl" />
+            <input v-model="regNumber" type="text" placeholder="RDB Registration Number" class="w-full p-3 bg-white border border-slate-200 rounded-xl" />
+          </div>
 
-              <input
-                type="text"
-                placeholder="TVET School"
-                class="w-full p-3 border rounded-xl"
-              />
+          <button type="submit" class="w-full bg-teal-700 text-white py-3.5 rounded-xl font-semibold hover:bg-teal-800 transition shadow-sm mt-4">
+            Create Free Account
+          </button>
+        </form>
 
-              <input
-                type="text"
-                placeholder="Trade"
-                class="w-full p-3 border rounded-xl"
-              />
-
-              <input
-                type="tel"
-                placeholder="Phone Number"
-                class="w-full p-3 border rounded-xl"
-              />
-
-            </div>
-
-            <!-- COMPANY FIELDS -->
-
-            <div
-              v-if="role === 'company'"
-              class="space-y-4"
-            >
-
-              <input
-                type="text"
-                placeholder="Company Name"
-                class="w-full p-3 border rounded-xl"
-              />
-
-              <input
-                type="text"
-                placeholder="Company Address"
-                class="w-full p-3 border rounded-xl"
-              />
-
-              <input
-                type="text"
-                placeholder="Registration Number"
-                class="w-full p-3 border rounded-xl"
-              />
-
-            </div>
-
-            <!-- Register Button -->
-
-            <button
-              type="submit"
-              class="
-              w-full
-              bg-teal-600
-              text-white
-              py-3
-              rounded-xl
-              font-semibold
-              hover:bg-teal-700
-              transition
-              "
-            >
-              Create Account
-            </button>
-
-          </form>
-
-          <p
-            class="text-center text-gray-500 mt-6"
-          >
-            Already have an account?
-
-            <router-link
-              to="/login"
-              class="text-teal-600 font-semibold"
-            >
-              Sign In
-            </router-link>
-
-          </p>
-
-        </div>
-
+        <p class="text-center text-slate-500 mt-6">
+          Already have an account?
+          <router-link to="/login" class="text-teal-700 font-semibold hover:underline">Sign In</router-link>
+        </p>
       </div>
 
     </div>
-
   </div>
 </template>

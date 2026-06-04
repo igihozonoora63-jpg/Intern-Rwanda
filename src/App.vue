@@ -12,6 +12,7 @@ const hideLayout = computed(() =>
 </script>
 
 <template>
+  
   <Navbar v-if="!hideLayout"/>
   <RouterView/>
       <Footer v-if="!hideLayout"/>

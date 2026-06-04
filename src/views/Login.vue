@@ -5,6 +5,7 @@ import {useRouter} from 'vue-router';
 const router=useRouter();
 const email=ref('');
 const password=ref('');
+const role= ref('');
 
 
 const login = () => {

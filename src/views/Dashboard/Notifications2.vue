@@ -1,166 +1,58 @@
+<!-- CompanyNotifications.vue -->
+<script setup>
+import { ref } from 'vue';
+import { Sparkles, FileText, CheckCircle2, Calendar, GraduationCap, Clock } from 'lucide-vue-next';
+
+const notifications = ref([
+  { id: 1, type: 'application', title: 'New Application Dispatched', desc: 'Noora Uwase has applied for the Software Development Internship track.', badge: 'Intake', time: '5 mins ago', icon: Sparkles, style: 'border-slate-100 bg-white' },
+  { id: 2, type: 'request', title: 'Verification Register Sent', desc: 'An evaluation prompt was sent automatically to SOS Technical High School channels.', badge: 'System', time: '1 hour ago', icon: FileText, style: 'border-slate-100 bg-white' },
+  { id: 3, type: 'success', title: 'Student Identity Verified', desc: 'Institutional enrollment confirmation has been approved directly by the school principal.', badge: 'Vetted', time: 'Yesterday', icon: CheckCircle2, style: 'border-emerald-100 bg-emerald-50/10' },
+  { id: 4, type: 'warning', title: 'Internship Deadline Reminder', desc: 'The entry gateway for Software Development Internship parameters closes in 72 hours.', badge: 'SLA', time: 'Today', icon: Calendar, style: 'border-amber-100 bg-amber-50/10' },
+  { id: 5, type: 'placement', title: 'Student Placement Accepted', desc: 'Eric Niyonzima has locked in authorization for the current corporate cohort.', badge: 'Hired', time: '2 days ago', icon: GraduationCap, style: 'border-slate-100 bg-white' }
+]);
+</script>
+
 <template>
-  <div>
-    
-    <!-- Header -->
+  <div class="animate-fade-in-up">
+    <!-- Header Block -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-slate-900 tracking-tight">
-        Notifications
-      </h1>
-
-      <p class="text-slate-500 mt-2">
-        Stay updated on student applications, verification requests, and internship activity.
-      </p>
+      <h1 class="text-3xl font-black text-slate-900 tracking-tight">Notifications</h1>
+      <p class="text-slate-500 mt-1.5 text-sm sm:text-base">Track status changes regarding active pipelines, institutional records, and technical cohort activities.</p>
     </div>
 
-    <!-- Notification Cards -->
+    <!-- Notification Container Cards Stack -->
     <div class="space-y-4 max-w-4xl">
-
-      <!-- New Application -->
-      <div
-        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition"
+      <div 
+        v-for="(item, index) in notifications" 
+        :key="item.id"
+        :style="{ animationDelay: `${index * 60}ms` }"
+        :class="['p-5 rounded-2xl border shadow-sm hover:shadow-md transition duration-200 flex items-start gap-4 animate-fade-in-up', item.style]"
       >
-        <div class="flex items-center gap-4">
+        <!-- Dynamic Icon Matrix Container -->
+        <div :class="['w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border shadow-sm',
+          item.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-600' :
+          item.type === 'warning' ? 'bg-amber-50 border-amber-200 text-amber-600' :
+          item.type === 'request' ? 'bg-blue-50 border-blue-200 text-blue-600' : 'bg-teal-50 border-teal-100 text-teal-700'
+        ]">
+          <component :is="item.icon" :size="18" />
+        </div>
 
-          <div
-            class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xl"
-          >
-            🎉
+        <!-- Meta Text Block Description -->
+        <div class="flex-1 space-y-1">
+          <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+            <h3 class="font-bold text-slate-800 text-base leading-tight">{{ item.title }}</h3>
+            <span class="px-2 py-0.5 rounded bg-slate-100 border border-slate-200/60 text-slate-500 font-bold tracking-wider text-[10px] uppercase">{{ item.badge }}</span>
           </div>
 
-          <div>
-            <h3 class="font-semibold text-slate-800">
-              New Application Received
-            </h3>
+          <p class="text-slate-500 text-sm leading-relaxed pr-4">
+            {{ item.desc }}
+          </p>
 
-            <p class="text-sm text-slate-500">
-              Noora Uwase has applied for the Software Development Internship.
-            </p>
-
-            <span class="text-xs text-slate-400">
-              5 minutes ago
-            </span>
+          <div class="flex items-center gap-1 text-slate-400 text-xs pt-1 font-medium">
+            <Clock :size="12" /> {{ item.time }}
           </div>
-
         </div>
       </div>
-
-      <!-- Verification -->
-      <div
-        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition"
-      >
-        <div class="flex items-center gap-4">
-
-          <div
-            class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl"
-          >
-            📄
-          </div>
-
-          <div>
-            <h3 class="font-semibold text-slate-800">
-              Verification Request Sent
-            </h3>
-
-            <p class="text-sm text-slate-500">
-              A verification email was sent to SOS Technical High School.
-            </p>
-
-            <span class="text-xs text-slate-400">
-              1 hour ago
-            </span>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Verified -->
-      <div
-        class="bg-white p-5 rounded-2xl border border-emerald-100 shadow-sm hover:shadow-md transition"
-      >
-        <div class="flex items-center gap-4">
-
-          <div
-            class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xl"
-          >
-            ✅
-          </div>
-
-          <div>
-            <h3 class="font-semibold text-slate-800">
-              Student Verified
-            </h3>
-
-            <p class="text-sm text-slate-500">
-              Enrollment verification has been approved by the school.
-            </p>
-
-            <span class="text-xs text-slate-400">
-              Yesterday
-            </span>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Deadline -->
-      <div
-        class="bg-white p-5 rounded-2xl border border-amber-100 shadow-sm hover:shadow-md transition"
-      >
-        <div class="flex items-center gap-4">
-
-          <div
-            class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-xl"
-          >
-            📅
-          </div>
-
-          <div>
-            <h3 class="font-semibold text-slate-800">
-              Internship Deadline Reminder
-            </h3>
-
-            <p class="text-sm text-slate-500">
-              The Software Development Internship closes in 3 days.
-            </p>
-
-            <span class="text-xs text-slate-400">
-              Today
-            </span>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Accepted Student -->
-      <div
-        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition"
-      >
-        <div class="flex items-center gap-4">
-
-          <div
-            class="w-12 h-12 bg-teal-100 text-teal-600 rounded-full flex items-center justify-center text-xl"
-          >
-            👨‍🎓
-          </div>
-
-          <div>
-            <h3 class="font-semibold text-slate-800">
-              Student Accepted
-            </h3>
-
-            <p class="text-sm text-slate-500">
-              Eric Niyonzima has been accepted for internship placement.
-            </p>
-
-            <span class="text-xs text-slate-400">
-              2 days ago
-            </span>
-          </div>
-
-        </div>
-      </div>
-
     </div>
-
   </div>
 </template>

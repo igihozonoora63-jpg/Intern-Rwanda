@@ -30,7 +30,8 @@ const passwordsMatch = computed(() => {
   return confirmPassword.value === newPassword.value
 })
 
-const strength = computed(() => {
+// Fixed: Unified back to a dynamic computed layout that references template usage
+const passwordStrength = computed(() => {
   const pwd = newPassword.value
 
   if (!pwd) {
@@ -78,6 +79,7 @@ const strength = computed(() => {
 
 async function saveProfile() {
   profileError.value = ''
+  saveSuccess.value = false
 
   if (!companyName.value.trim()) {
     profileError.value = 'Company name is required.'
@@ -99,7 +101,6 @@ async function saveProfile() {
   )
 
   isSavingProfile.value = false
-
   saveSuccess.value = true
 
   clearTimeout(successTimer)
@@ -142,7 +143,6 @@ async function savePassword() {
   )
 
   isSavingPassword.value = false
-
   passwordSuccess.value = true
 
   currentPassword.value = ''
@@ -194,6 +194,14 @@ onBeforeUnmount(() => {
             class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition" />
         </div>
 
+        <!-- Added animated Company Profile Error panel -->
+        <transition name="fade">
+          <div v-if="profileError" class="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            {{ profileError }}
+          </div>
+        </transition>
+
         <div class="flex items-center justify-between pt-2">
           <transition name="fade">
             <span v-if="saveSuccess" class="flex items-center gap-1.5 text-teal-600 text-sm font-medium">
@@ -201,10 +209,11 @@ onBeforeUnmount(() => {
               Company info saved successfully!
             </span>
           </transition>
-          <button @click="saveProfile"
-            class="ml-auto bg-teal-600 hover:bg-teal-700 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors duration-200 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-            Save Changes
+          <button @click="saveProfile" :disabled="isSavingProfile"
+            class="ml-auto bg-teal-600 hover:bg-teal-700 disabled:bg-teal-400 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 shadow-sm active:scale-95">
+            <svg v-if="!isSavingProfile" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            <span v-else class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            {{ isSavingProfile ? 'Saving...' : 'Save Changes' }}
           </button>
         </div>
       </div>
@@ -253,14 +262,14 @@ onBeforeUnmount(() => {
           <div v-if="newPassword" class="mt-2">
             <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
               <div class="h-full rounded-full transition-all duration-300"
-                :class="passwordStrength(newPassword).color"
-                :style="{ width: passwordStrength(newPassword).width }"></div>
+                :class="passwordStrength.color"
+                :style="{ width: passwordStrength.width }"></div>
             </div>
             <p class="text-xs mt-1" :class="{
-              'text-red-500': passwordStrength(newPassword).label === 'Weak',
-              'text-yellow-500': passwordStrength(newPassword).label === 'Fair',
-              'text-teal-500': passwordStrength(newPassword).label === 'Good' || passwordStrength(newPassword).label === 'Strong'
-            }">{{ passwordStrength(newPassword).label }}</p>
+              'text-red-500': passwordStrength.label === 'Weak',
+              'text-yellow-500': passwordStrength.label === 'Fair',
+              'text-teal-500': passwordStrength.label === 'Good' || passwordStrength.label === 'Strong'
+            }">{{ passwordStrength.label }}</p>
           </div>
         </div>
 
@@ -270,14 +279,14 @@ onBeforeUnmount(() => {
           <div class="relative">
             <input v-model="confirmPassword" :type="showConfirm ? 'text' : 'password'" placeholder="Confirm new password"
               class="w-full border border-gray-200 rounded-xl px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
-              :class="confirmPassword && confirmPassword !== newPassword ? 'border-red-400 focus:ring-red-400' : ''" />
+              :class="!passwordsMatch ? 'border-red-400 focus:ring-red-400' : ''" />
             <button type="button" @click="showConfirm = !showConfirm"
               class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-teal-600 transition-colors">
               <svg v-if="!showConfirm" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               <svg v-else xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
             </button>
           </div>
-          <p v-if="confirmPassword && confirmPassword !== newPassword" class="text-xs text-red-500 mt-1">Passwords do not match.</p>
+          <p v-if="!passwordsMatch" class="text-xs text-red-500 mt-1">Passwords do not match.</p>
         </div>
 
         <!-- Error / Success -->
@@ -295,10 +304,11 @@ onBeforeUnmount(() => {
         </transition>
 
         <div class="flex justify-end pt-2">
-          <button @click="savePassword"
-            class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors duration-200 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            Update Password
+          <button @click="savePassword" :disabled="isSavingPassword"
+            class="bg-teal-600 hover:bg-teal-700 disabled:bg-teal-400 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 shadow-sm active:scale-95">
+            <svg v-if="!isSavingPassword" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span v-else class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            {{ isSavingPassword ? 'Updating...' : 'Update Password' }}
           </button>
         </div>
       </div>
@@ -307,6 +317,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.fade-enter-active, .fade-leave-active { transition: opacity .25s; }
+.fade-enter-active, .fade-leave-active { transition: opacity .25s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
 </style>

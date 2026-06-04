@@ -16,12 +16,30 @@ const showConfirm = ref(false);
 const theme = ref('Light Mode');
 
 const saveSuccess = ref(false);
+const profileError = ref('');
 const passwordError = ref('');
 const passwordSuccess = ref(false);
 
+const isSavingProfile = ref(false);
+const isSavingPassword = ref(false);
+
 function saveProfile() {
-  saveSuccess.value = true;
-  setTimeout(() => (saveSuccess.value = false), 3000);
+  profileError.value = '';
+  saveSuccess.value = false;
+
+  if (!fullName.value.trim() || !email.value.trim()) {
+    profileError.value = 'Full name and email are required fields.';
+    return;
+  }
+
+  isSavingProfile.value = true;
+  
+  // Simulated API call animation
+  setTimeout(() => {
+    isSavingProfile.value = false;
+    saveSuccess.value = true;
+    setTimeout(() => (saveSuccess.value = false), 3000);
+  }, 1000);
 }
 
 function savePassword() {
@@ -41,11 +59,17 @@ function savePassword() {
     return;
   }
 
-  passwordSuccess.value = true;
-  currentPassword.value = '';
-  newPassword.value = '';
-  confirmPassword.value = '';
-  setTimeout(() => (passwordSuccess.value = false), 3000);
+  isSavingPassword.value = true;
+
+  // Simulated API call animation
+  setTimeout(() => {
+    isSavingPassword.value = false;
+    passwordSuccess.value = true;
+    currentPassword.value = '';
+    newPassword.value = '';
+    confirmPassword.value = '';
+    setTimeout(() => (passwordSuccess.value = false), 3000);
+  }, 1000);
 }
 
 function passwordStrength(pwd) {
@@ -104,6 +128,14 @@ function passwordStrength(pwd) {
           </div>
         </div>
 
+        <!-- Student Profile Error -->
+        <transition name="fade">
+          <div v-if="profileError" class="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            {{ profileError }}
+          </div>
+        </transition>
+
         <div class="flex items-center justify-between pt-2">
           <transition name="fade">
             <span v-if="saveSuccess" class="flex items-center gap-1.5 text-teal-600 text-sm font-medium">
@@ -111,10 +143,11 @@ function passwordStrength(pwd) {
               Profile saved successfully!
             </span>
           </transition>
-          <button @click="saveProfile"
-            class="ml-auto bg-teal-600 hover:bg-teal-700 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors duration-200 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-            Save Changes
+          <button @click="saveProfile" :disabled="isSavingProfile"
+            class="ml-auto bg-teal-600 hover:bg-teal-700 disabled:bg-teal-400 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 shadow-sm active:scale-95">
+            <svg v-if="!isSavingProfile" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            <span v-else class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            {{ isSavingProfile ? 'Saving...' : 'Save Changes' }}
           </button>
         </div>
       </div>
@@ -205,10 +238,11 @@ function passwordStrength(pwd) {
         </transition>
 
         <div class="flex justify-end pt-2">
-          <button @click="savePassword"
-            class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors duration-200 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            Update Password
+          <button @click="savePassword" :disabled="isSavingPassword"
+            class="bg-teal-600 hover:bg-teal-700 disabled:bg-teal-400 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 shadow-sm active:scale-95">
+            <svg v-if="!isSavingPassword" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span v-else class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            {{ isSavingPassword ? 'Updating...' : 'Update Password' }}
           </button>
         </div>
       </div>
@@ -217,6 +251,6 @@ function passwordStrength(pwd) {
 </template>
 
 <style scoped>
-.fade-enter-active, .fade-leave-active { transition: opacity .25s; }
+.fade-enter-active, .fade-leave-active { transition: opacity .25s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
 </style>

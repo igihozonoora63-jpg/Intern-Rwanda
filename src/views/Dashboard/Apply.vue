@@ -1,6 +1,8 @@
+<!-- ApplicationForm.vue -->
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { User, Mail, Phone, Link2, UploadCloud, FileText, CheckCircle2, ArrowLeft, Send } from 'lucide-vue-next';
 
 const router = useRouter();
 
@@ -47,122 +49,132 @@ const handleCancel = () => {
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto space-y-6 py-4">
+  <div class="max-w-2xl mx-auto space-y-6 py-8 px-4 animate-fade-in-up">
     <!-- Header -->
     <div>
-      <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Internship Application</h1>
-      <p class="text-slate-500 mt-1">Please fill out the form below to submit your application.</p>
+      <h1 class="text-3xl font-black text-slate-900 tracking-tight">Internship Application</h1>
+      <p class="text-slate-500 mt-1.5 text-sm sm:text-base">Please fill out the form below to submit your corporate training inquiry register.</p>
     </div>
 
     <!-- Success Message Banner -->
-    <div v-if="isSuccess" class="bg-teal-50 border border-teal-200 text-teal-800 p-4 rounded-xl flex items-center gap-3 transition-all">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-      <div>
-        <p class="font-semibold">Application Submitted Successfully!</p>
-        <p class="text-sm text-teal-700/90 mt-0.5">Redirecting you back to the available opportunities...</p>
+    <transition name="pop">
+      <div v-if="isSuccess" class="bg-emerald-50 border border-emerald-200 text-emerald-900 p-5 rounded-2xl flex items-start gap-3.5 shadow-sm shadow-emerald-500/5">
+        <CheckCircle2 class="h-5 w-5 text-emerald-600 shrink-0 mt-0.5 animate-bounce" />
+        <div>
+          <p class="font-bold">Application Dispatched Successfully!</p>
+          <p class="text-sm text-emerald-700 mt-0.5">Your documentation is locked. Redirecting you back to the corporate tracking stream...</p>
+        </div>
       </div>
-    </div>
+    </transition>
 
     <!-- Application Form Card -->
-    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200/60">
-      <form @submit.prevent="handleSubmit" class="space-y-5">
+    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-xl shadow-slate-100/50 border border-slate-100 relative overflow-hidden">
+      <form @submit.prevent="handleSubmit" class="space-y-6">
         
         <!-- Full Name -->
         <div>
-          <label for="fullName" class="block text-sm font-semibold text-slate-700 mb-1.5">Full Name *</label>
-          <input 
-            v-model="form.fullName"
-            id="fullName" 
-            type="text" 
-            required
-            placeholder="John Doe"
-            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 text-slate-800 transition"
-          />
+          <label for="fullName" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Full Name *</label>
+          <div class="relative">
+            <User :size="18" class="absolute left-4 top-3.5 text-slate-400" />
+            <input 
+              v-model="form.fullName"
+              id="fullName" 
+              type="text" 
+              required
+              placeholder="John Doe"
+              class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-600/10 focus:border-teal-600 text-slate-800 transition text-sm bg-slate-50/30"
+            />
+          </div>
         </div>
 
         <!-- Grid Container for Email and Phone -->
         <div class="grid sm:grid-cols-2 gap-4">
           <!-- Email Address -->
           <div>
-            <label for="email" class="block text-sm font-semibold text-slate-700 mb-1.5">Email Address *</label>
-            <input 
-              v-model="form.email"
-              id="email" 
-              type="email" 
-              required
-              placeholder="you@example.com"
-              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 text-slate-800 transition"
-            />
+            <label for="email" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Email Address *</label>
+            <div class="relative">
+              <Mail :size="18" class="absolute left-4 top-3.5 text-slate-400" />
+              <input 
+                v-model="form.email"
+                id="email" 
+                type="email" 
+                required
+                placeholder="you@example.com"
+                class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-600/10 focus:border-teal-600 text-slate-800 transition text-sm bg-slate-50/30"
+              />
+            </div>
           </div>
 
           <!-- Phone Number -->
           <div>
-            <label for="phone" class="block text-sm font-semibold text-slate-700 mb-1.5">Phone Number *</label>
-            <input 
-              v-model="form.phone"
-              id="phone" 
-              type="tel" 
-              required
-              placeholder="+250 78X XXX XXX"
-              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 text-slate-800 transition"
-            />
+            <label for="phone" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Phone Number *</label>
+            <div class="relative">
+              <Phone :size="18" class="absolute left-4 top-3.5 text-slate-400" />
+              <input 
+                v-model="form.phone"
+                id="phone" 
+                type="tel" 
+                required
+                placeholder="+250 78X XXX XXX"
+                class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-600/10 focus:border-teal-600 text-slate-800 transition text-sm bg-slate-50/30"
+              />
+            </div>
           </div>
         </div>
 
         <!-- Portfolio / Website Link -->
         <div>
-          <label for="portfolio" class="block text-sm font-semibold text-slate-700 mb-1.5">Portfolio or GitHub URL</label>
-          <input 
-            v-model="form.portfolioUrl"
-            id="portfolio" 
-            type="url" 
-            placeholder="https://github.com/yourusername"
-            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 text-slate-800 transition"
-          />
+          <label for="portfolio" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Portfolio or GitHub URL</label>
+          <div class="relative">
+            <Link2 :size="18" class="absolute left-4 top-3.5 text-slate-400" />
+            <input 
+              v-model="form.portfolioUrl"
+              id="portfolio" 
+              type="url" 
+              placeholder="https://github.com/yourusername"
+              class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-600/10 focus:border-teal-600 text-slate-800 transition text-sm bg-slate-50/30"
+            />
+          </div>
         </div>
 
         <!-- Resume Upload -->
         <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1.5">Upload CV/Resume *</label>
-          <div class="border-2 border-dashed border-slate-200 hover:border-slate-300 rounded-xl p-4 transition text-center relative bg-slate-50/50">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Upload CV/Resume *</label>
+          <div class="border-2 border-dashed border-slate-200 hover:border-teal-600/40 rounded-xl p-5 transition text-center relative bg-slate-50/50 group">
             <input 
               type="file" 
               id="resume" 
               required
               accept=".pdf,.doc,.docx"
               @change="handleFileUpload"
-              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
             />
-            <div class="space-y-1">
-              <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
+            <div class="space-y-2">
+              <UploadCloud :size="32" class="mx-auto text-slate-400 group-hover:text-teal-600 transition-colors" />
               <div class="text-sm text-slate-600">
-                <span class="text-teal-600 font-semibold">Click to upload</span> or drag and drop
+                <span class="text-teal-700 font-bold">Click to dispatch</span> or drag files here
               </div>
-              <p class="text-xs text-slate-400">PDF, DOC, or DOCX up to 5MB</p>
+              <p class="text-xs text-slate-400">Secure validation for PDF, DOC, or DOCX formats up to 5MB</p>
             </div>
           </div>
           <!-- Selected File Display -->
-          <p v-if="resume" class="mt-2 text-xs font-medium text-teal-600 flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Selected file: {{ resume.name }}
-          </p>
+          <transition name="pop">
+            <div v-if="resume" class="mt-3 p-3 bg-teal-50/50 border border-teal-100 rounded-xl text-xs font-medium text-teal-700 flex items-center gap-2">
+              <FileText :size="14" class="text-teal-600" />
+              <span>Verified file attachment: <strong>{{ resume.name }}</strong></span>
+            </div>
+          </transition>
         </div>
 
         <!-- Cover Letter / Why do you want this role? -->
         <div>
-          <label for="coverLetter" class="block text-sm font-semibold text-slate-700 mb-1.5">Cover Letter / Note to Hirer</label>
+          <label for="coverLetter" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Cover Letter / Note to Hirer</label>
           <textarea 
             v-model="form.coverLetter"
             id="coverLetter" 
             rows="4" 
-            placeholder="Briefly describe why you are a great fit for this structural or development internship..."
-            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 text-slate-800 transition resize-none"
+            placeholder="Briefly describe why you are a great fit for this specific technical or development track role..."
+            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-600/10 focus:border-teal-600 text-slate-800 transition text-sm bg-slate-50/30 resize-none"
           ></textarea>
         </div>
 
@@ -171,21 +183,22 @@ const handleCancel = () => {
           <button 
             type="button" 
             @click="handleCancel"
-            class="px-5 py-2.5 border border-slate-200 rounded-xl text-slate-600 text-sm font-semibold hover:bg-slate-50 transition"
+            class="px-5 py-3 border border-slate-200 rounded-xl text-slate-600 text-sm font-semibold hover:bg-slate-50 active:scale-[0.99] transition flex items-center gap-1.5"
           >
-            Cancel
+            <ArrowLeft :size="16" /> Cancel
           </button>
           <button 
             type="submit" 
             :disabled="isSubmitting || isSuccess"
-            class="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:bg-teal-400 text-white text-sm font-semibold rounded-xl transition shadow-sm flex items-center justify-center min-w-[140px]"
+            class="px-6 py-3 bg-teal-700 hover:bg-teal-800 disabled:bg-teal-400 text-white text-sm font-semibold rounded-xl active:scale-[0.99] transition shadow-md shadow-teal-700/10 flex items-center justify-center min-w-[160px] gap-2"
           >
             <!-- Loading Spinner State -->
-            <svg v-if="isSubmitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+            <svg v-if="isSubmitting" class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            {{ isSubmitting ? 'Submitting...' : 'Submit Application' }}
+            <Send v-else :size="16" />
+            {{ isSubmitting ? 'Processing...' : 'Submit Register' }}
           </button>
         </div>
         

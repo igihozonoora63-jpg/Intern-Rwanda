@@ -57,7 +57,7 @@ import {
           </button>
         </router-link>
           <br>
-          <router-link to="'/register'"><button
+          <router-link to="/register"><button
             class="bg-teal-700 hover:bg-teal-800 transition text-white px-10 py-4 rounded-2xl text-lg font-semibold flex items-center gap-3"
           >
             <FileText :size="20" />
